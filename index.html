@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaCaisse Pro</title>
+<!-- Tes polices Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;--panel:#111827;--card:#1a2235;--input:#0d1424;
+  --g:#00e5a0;--g2:#00a86b;--b:#3b82f6;--a:#f59e0b;--r:#ef4444;--p:#8b5cf6;
+  --t1:#f0f4ff;--t2:#8b98b8;--t3:#4a5568;
+  --bd:#1e2d47;--bdh:#2a3f63;
+}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bdh);border-radius:2px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);height:100vh;overflow:hidden}
+.fs{font-family:'Syne',sans-serif}
+.fm{font-family:'DM Mono',monospace}
+
+/* PAGES */
+.page{position:fixed;inset:0;display:none}
+.page.on{display:flex}
+
+/* =========== LOGIN =========== */
+#pg-login{align-items:center;justify-content:center;background:var(--bg);
+  background-image:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(0,229,160,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 40% at 85% 90%,rgba(59,130,246,.07) 0%,transparent 60%);}
+.lcard{width:400px;background:var(--panel);border:1px solid var(--bdh);border-radius:20px;padding:38px 34px;
+  box-shadow:0 32px 80px rgba(0,0,0,.5);position:relative;overflow:hidden;}
+.lcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--g),var(--b),var(--p));}
+.llogo{display:flex;align-items:center;gap:12px;margin-bottom:30px;justify-content:center}
+.llogo-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--g),var(--g2));
+  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 24px rgba(0,229,160,.25);}
+.llogo-t{font-size:20px;font-weight:800;letter-spacing:-.4px}
+.llogo-s{font-size:9px;color:var(--t2);font-family:'DM Mono',monospace;letter-spacing:1.5px;text-transform:uppercase}
+.lgreet{text-align:center;margin-bottom:26px}
+.lgreet h2{font-weight:700;font-size:17px;margin-bottom:3px}
+.lgreet p{font-size:11px;color:var(--t2);font-family:'DM Mono',monospace}
+.fg{margin-bottom:14px}
+.flabel{font-size:10px;color:var(--t2);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;display:block}
+.finput{width:100%;background:var(--input);border:1px solid var(--bdh);border-radius:9px;padding:10px 13px;
+  font-family:'DM Sans',sans-serif;font-size:13px;color:var(--t1);outline:none;transition:border-color .15s,box-shadow .15s;}
+.finput:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+.finput::placeholder{color:var(--t3)}
+.lbtn{width:100%;background:linear-gradient(135deg,var(--g),var(--g2));border:none;border-radius:9px;padding:12px;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--bg);cursor:pointer;
+  transition:all .18s;box-shadow:0 4px 16px rgba(0,229,160,.25);}
+.lbtn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,229,160,.35)}
+.lerr{margin-top:10px;padding:8px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);
+  border-radius:8px;font-size:11px;color:var(--r);font-family:'DM Mono',monospace;display:none;text-align:center}
+.lerr.on{display:block}
+.lhint{margin-top:18px;padding:12px;background:var(--card);border:1px solid var(--bd);border-radius:10px}
+.lhint-t{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.lhu{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;cursor:pointer;padding:3px 0}
+.lhu:hover .lhu-l{color:var(--g)}
+.lhu-l{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);transition:color .15s}
+.lhu-p{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3)}
+.badg{font-size:9px;padding:1px 6px;border-radius:4px;font-family:'DM Mono',monospace}
+.ba{background:rgba(139,92,246,.15);color:var(--p);border:1px solid rgba(139,92,246,.3)}
+.bc{background:rgba(0,229,160,.12);color:var(--g);border:1px solid rgba(0,229,160,.25)}
+
+/* =========== APP SHELL =========== */
+#shell{position:fixed;inset:0;display:none;flex-direction:column}
+#shell.on{display:flex}
+
+/* SIDEBAR */
+#sb{position:fixed;top:0;left:0;bottom:0;width:215px;background:var(--panel);border-right:1px solid var(--bd);display:flex;flex-direction:column;z-index:50}
+.sbl{padding:16px 18px 13px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.sbl-i{width:30px;height:30px;background:linear-gradient(135deg,var(--g),var(--g2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sbl-t{font-weight:800;font-size:14px;letter-spacing:-.3px}
+.sbl-s{font-size:9px;color:var(--t2);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+.sbnav{flex:1;padding:10px;overflow-y:auto}
+.navs{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;padding:10px 8px 4px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 9px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:1px;border:1px solid transparent;font-size:12px;color:var(--t2)}
+.ni:hover{background:rgba(255,255,255,.04);color:var(--t1)}
+.ni.on{background:rgba(0,229,160,.1);border-color:rgba(0,229,160,.2);color:var(--g)}
+.ni .ni-i{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nbadg{margin-left:auto;font-size:9px;font-family:'DM Mono',monospace;background:var(--r);color:#fff;border-radius:8px;padding:1px 5px;display:none}
+.sbu{padding:11px 13px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:9px}
+.av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--b),var(--p));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;flex-shrink:0;color:#fff}
+.un{font-size:11px;font-weight:600;margin-bottom:1px}
+.ur{font-size:9px;color:var(--t2);font-family:'DM Mono',monospace}
+.loutb{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;transition:color .15s;padding:4px}
+.loutb:hover{color:var(--r)}
+
+/* TOPBAR */
+#tb{position:fixed;top:0;left:215px;right:0;height:50px;background:var(--panel);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 22px;gap:14px;z-index:40}
+#tb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.3}
+.tbt{font-weight:700;font-size:15px;flex:1}
+.tbdiv{width:1px;height:18px;background:var(--bd)}
+.tbst{display:flex;flex-direction:column;gap:1px}
+.tbsl{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.7px}
+.tbsv{font-size:12px;font-family:'DM Mono',monospace;color:var(--g)}
+.tbck{font-family:'DM Mono',monospace;font-size:11px;color:var(--t2)}
+
+/* CONTENT */
+#ca{position:fixed;top:50px;left:215px;right:0;bottom:34px;overflow:hidden}
+.cpg{display:none;height:100%;overflow:hidden}
+.cpg.on{display:flex;flex-direction:column}
+
+/* FOOTER */
+#ft{position:fixed;bottom:0;left:215px;right:0;height:34px;background:var(--panel);border-top:1px solid var(--bd);display:flex;align-items:center;padding:0 18px;font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;gap:10px;position:fixed}
+.fdot{width:5px;height:5px;border-radius:50%;background:var(--g);box-shadow:0 0 5px var(--g);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.fsig{margin-left:auto;color:var(--t2)}
+.fsig span{color:var(--g)}
+
+/* =========== DASHBOARD =========== */
+#dash-inner{flex:1;overflow-y:auto;padding:18px 22px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.green::before{background:var(--g)}.kpi.blue::before{background:var(--b)}.kpi.amber::before{background:var(--a)}.kpi.purple::before{background:var(--p)}
+.kpi-ico{font-size:22px;margin-bottom:8px}
+.kpi-lab{font-size:9px;color:var(--t2);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
+.kpi-val{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.4px}
+.kpi-sub{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:3px}
+.drow{display:grid;gap:14px;margin-bottom:16px}
+.drow2{grid-template-columns:1fr 1fr}.drow3{grid-template-columns:2fr 1fr 1fr}
+.dpan{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;overflow:hidden}
+.dpan-t{font-weight:700;font-size:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.dpan-t span{font-size:9px;font-family:'DM Mono',monospace;color:var(--t2);font-weight:400}
+.barchart{display:flex;align-items:flex-end;gap:5px;height:90px}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.barfill{width:100%;border-radius:3px 3px 0 0;transition:height .4s;min-height:2px}
+.barlbl{font-size:8px;font-family:'DM Mono',monospace;color:var(--t3)}
+.tpi{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd)}
+.tpi:last-child{border-bottom:none}
+.tpi-rk{font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);width:14px;text-align:center}
+.tpi-nm{flex:1;font-size:11px}
+.tpbw{width:70px;background:var(--input);border-radius:3px;height:4px}
+.tpb{height:4px;border-radius:3px;background:var(--g)}
+.tpv{font-family:'DM Mono',monospace;font-size:10px;color:var(--g);width:55px;text-align:right}
+.alrt{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:7px;margin-bottom:4px;cursor:pointer}
+.alrt.c{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}.alrt.l{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)}
+.alrt-nm{flex:1;font-size:11px}.alrt-qty{font-family:'DM Mono',monospace;font-size:10px}
+.alrt.c .alrt-qty{color:var(--r)}.alrt.l .alrt-qty{color:var(--a)}
+.catr{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.catd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.catn{flex:1;font-size:10px;color:var(--t2)}
+.catbw{width:55px;background:var(--input);border-radius:3px;height:3px}
+.catbf{height:3px;border-radius:3px}
+.catp{font-size:9px;font-family:'DM Mono',monospace;color:var(--t2);width:25px;text-align:right}
+
+/* =========== POS =========== */
+#pos-inner{flex:1;display:grid;grid-template-columns:1fr 355px;overflow:hidden}
+#pos-l{display:flex;flex-direction:column;border-right:1px solid var(--bd);overflow:hidden;background:var(--bg)}
+.sarea{padding:11px 14px 9px;border-bottom:1px solid var(--bd)}
+.swrap{position:relative}
+.sico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g);font-size:13px;pointer-events:none}
+#srch{width:100%;background:var(--input);border:1px solid var(--bdh);border-radius:8px;padding:9px 75px 9px 33px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--t1);outline:none;transition:border-color .15s,box-shadow .15s}
+#srch:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+#srch::placeholder{color:var(--t3)}
+.sbadg{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:9px;color:var(--t3);background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:2px 5px}
+#sugg{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1px solid var(--bdh);border-radius:8px;z-index:200;overflow:hidden;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+#sugg.on{display:block}
+.si{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--bd);font-size:12px}
+.si:last-child{border-bottom:none}.si:hover,.si.act{background:rgba(0,229,160,.08)}.si:hover .si-nm,.si.act .si-nm{color:var(--g)}
+.si-cat{font-size:8px;font-family:'DM Mono',monospace;padding:2px 5px;border-radius:3px;background:var(--input);border:1px solid var(--bd);color:var(--t2);white-space:nowrap}
+.si-nm{flex:1;font-size:11px;font-weight:500}.si-pr{font-family:'DM Mono',monospace;font-size:10px;color:var(--g)}.si-st{font-family:'DM Mono',monospace;font-size:9px;color:var(--t3)}
+.si-st.low{color:var(--a)}.si-st.out{color:var(--r)}
+#cattabs{display:flex;gap:5px;padding:7px 14px;overflow-x:auto;border-bottom:1px solid var(--bd);flex-shrink:0}
+#cattabs::-webkit-scrollbar{height:2px}
+.ctab{padding:4px 9px;border-radius:6px;font-size:10px;cursor:pointer;white-space:nowrap;border:1px solid var(--bd);background:transparent;color:var(--t2);transition:all .15s;font-family:'DM Mono',monospace}
+.ctab.on,.ctab:hover{background:rgba(0,229,160,.1);border-color:var(--g);color:var(--g)}
+#pgrid{flex:1;overflow-y:auto;padding:10px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(144px,1fr));gap:7px;align-content:start}
+.pcd{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:10px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.pcd::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g);opacity:0;transition:opacity .18s}
+.pcd:hover:not(.oos){border-color:var(--g);transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.3)}.pcd:hover:not(.oos)::before{opacity:1}
+.pcd.oos{opacity:.4;cursor:not-allowed}.pcd.lows{border-color:rgba(245,158,11,.25)}
+.pcatl{font-size:8px;font-family:'DM Mono',monospace;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.pnml{font-size:11px;font-weight:500;line-height:1.3;margin-bottom:6px}
+.pprl{font-family:'DM Mono',monospace;font-size:12px;color:var(--g);font-weight:500}
+.psp{position:absolute;top:6px;right:6px;font-size:8px;font-family:'DM Mono',monospace;padding:2px 5px;border-radius:4px}
+.sok{background:rgba(0,229,160,.12);color:var(--g)}.slow{background:rgba(245,158,11,.12);color:var(--a)}.sout{background:rgba(239,68,68,.15);color:var(--r)}
+.padb{margin-top:6px;width:100%;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);border-radius:5px;padding:4px;font-size:10px;color:var(--g);cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace}
+.padb:hover{background:rgba(0,229,160,.18);border-color:var(--g)}
+.nores{grid-column:1/-1;text-align:center;padding:40px;color:var(--t3);font-family:'DM Mono',monospace;font-size:11px}
+#pos-r{background:var(--panel);display:flex;flex-direction:column;overflow:hidden}
+.chdr{padding:11px 13px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.ctg{display:flex;align-items:center;gap:7px}
+.ctit{font-weight:700;font-size:12px}.cbadg{background:var(--g);color:var(--bg);font-size:9px;font-weight:700;padding:1px 6px;border-radius:9px;font-family:'DM Mono',monospace}
+.cclr{background:none;border:none;cursor:pointer;font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;transition:color .15s;padding:3px 5px;border-radius:4px}
+.cclr:hover{color:var(--r)}
+.ptabs{display:flex;border-bottom:1px solid var(--bd);flex-shrink:0}
+.ptab{flex:1;padding:7px;font-size:10px;font-family:'DM Mono',monospace;color:var(--t3);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s}
+.ptab.on{color:var(--g);border-bottom-color:var(--g)}
+#citms{flex:1;overflow-y:auto;padding:7px}
+.cemp{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:7px}
+.cemi{font-size:26px;opacity:.3}.cemt{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace}
+.citm{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin-bottom:5px;animation:sIn .15s ease}
+@keyframes sIn{from{opacity:0;transform:translateX(7px)}to{opacity:1;transform:none}}
+.citm-t{display:flex;align-items:flex-start;justify-content:space-between;gap:7px;margin-bottom:4px}
+.citm-nm{font-size:11px;font-weight:500;line-height:1.3;flex:1}
+.citm-rm{background:none;border:none;cursor:pointer;color:var(--t3);font-size:11px;transition:color .1s}.citm-rm:hover{color:var(--r)}
+.citm-b{display:flex;align-items:center;justify-content:space-between}
+.cqty{display:flex;align-items:center;gap:5px}
+.qbtn{width:19px;height:19px;background:var(--input);border:1px solid var(--bdh);border-radius:4px;color:var(--t2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s}
+.qbtn:hover{border-color:var(--g);color:var(--g)}
+.qnum{font-family:'DM Mono',monospace;font-size:11px;min-width:18px;text-align:center}
+.cipr{font-family:'DM Mono',monospace;font-size:11px;color:var(--g);font-weight:500}
+#ctots{padding:9px 13px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.trow{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:10px}
+.tlbl{color:var(--t2);font-family:'DM Mono',monospace}.tval{font-family:'DM Mono',monospace}
+.grow{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--bd);margin-top:2px}
+.glbl{font-weight:700;font-size:12px}.gval{font-family:'DM Mono',monospace;font-size:16px;color:var(--g)}
+#payarea{padding:9px 13px;border-bottom:1px solid var(--bd)}
+.plbl{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+#payinp{width:100%;background:var(--input);border:1px solid var(--bdh);border-radius:7px;padding:8px 11px;font-family:'DM Mono',monospace;font-size:14px;color:var(--a);outline:none;transition:border-color .15s}
+#payinp:focus{border-color:var(--a);box-shadow:0 0 0 2px rgba(245,158,11,.1)}
+#payinp::placeholder{color:var(--t3)}
+.qamts{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.qab{font-size:9px;font-family:'DM Mono',monospace;background:var(--input);border:1px solid var(--bd);border-radius:4px;padding:2px 7px;cursor:pointer;color:var(--t2);transition:all .15s}
+.qab:hover{border-color:var(--a);color:var(--a)}
+.chdisp{margin-top:6px;background:var(--input);border:1px solid var(--bd);border-radius:7px;padding:6px 11px;display:flex;justify-content:space-between;align-items:center}
+.chlbl{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace}
+#chval{font-family:'DM Mono',monospace;font-size:13px;color:var(--g)}
+#chval.neg{color:var(--r)}
+#valbtn{margin:9px 13px;background:linear-gradient(135deg,var(--g),var(--g2));border:none;border-radius:9px;padding:11px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--bg);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 14px rgba(0,229,160,.2)}
+#valbtn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,229,160,.3)}
+#valbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.f12b{background:rgba(0,0,0,.2);border-radius:3px;padding:1px 5px;font-size:9px;font-family:'DM Mono',monospace}
+#histlist{flex:1;overflow-y:auto;padding:7px;display:none}
+#histlist.on{display:block}
+.hi{background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:8px 11px;margin-bottom:4px;cursor:pointer;transition:border-color .15s}
+.hi:hover{border-color:var(--b)}
+.hi-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.hi-id{font-family:'DM Mono',monospace;font-size:9px;color:var(--b)}
+.hi-tot{font-family:'DM Mono',monospace;font-size:11px;color:var(--g)}
+.hi-time{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace}
+.hi-pr{font-size:9px;font-family:'DM Mono',monospace;color:var(--t3);background:var(--input);border:1px solid var(--bd);border-radius:3px;padding:1px 5px;cursor:pointer;transition:all .15s}
+.hi-pr:hover{color:var(--b);border-color:var(--b)}
+
+/* =========== STOCK PAGE =========== */
+#stock-inner{flex:1;overflow-y:auto;padding:18px 22px}
+.stbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.tsrch{position:relative;flex:1;min-width:180px}
+.tsrch input{width:100%;background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:8px 11px 8px 33px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t1);outline:none;transition:border-color .15s}
+.tsrch input:focus{border-color:var(--g)}
+.tsrch input::placeholder{color:var(--t3)}
+.tsrch .tsi{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--g);font-size:12px}
+.tsel{background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:8px 11px;font-family:'DM Mono',monospace;font-size:10px;color:var(--t2);outline:none;cursor:pointer}
+.tsel:focus{border-color:var(--g)}
+.astkb{background:linear-gradient(135deg,var(--g),var(--g2));border:none;border-radius:7px;padding:8px 14px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:var(--bg);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.astkb:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,229,160,.25)}
+.stwrap{background:var(--card);border:1px solid var(--bd);border-radius:11px;overflow:hidden}
+.sttbl{width:100%;border-collapse:collapse}
+.sttbl th{padding:9px 13px;font-size:9px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);background:var(--input);border-bottom:1px solid var(--bd);text-align:left}
+.sttbl th:last-child{text-align:right}
+.sttbl td{padding:9px 13px;border-bottom:1px solid var(--bd);font-size:11px;vertical-align:middle}
+.sttbl tr:last-child td{border-bottom:none}
+.sttbl tr:hover td{background:rgba(255,255,255,.015)}
+.tdnm{font-weight:500}.tdcat{font-family:'DM Mono',monospace;font-size:9px;color:var(--t2)}
+.tdpr{font-family:'DM Mono',monospace;color:var(--g);font-size:11px}
+.tdst{font-family:'DM Mono',monospace;font-weight:500;font-size:11px}
+.tdst.ok{color:var(--g)}.tdst.low{color:var(--a)}.tdst.out{color:var(--r)}
+.stbw{width:70px;background:var(--bg);border-radius:3px;height:3px;display:inline-block;vertical-align:middle;margin-left:7px}
+.stbf{height:3px;border-radius:3px}
+.tdact{display:flex;justify-content:flex-end;gap:5px}
+.tb2{font-size:9px;font-family:'DM Mono',monospace;padding:3px 7px;border-radius:4px;cursor:pointer;transition:all .15s;border:1px solid}
+.tb2.ed{color:var(--b);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.08)}.tb2.ed:hover{background:rgba(59,130,246,.18)}
+.tb2.rs{color:var(--g);border-color:rgba(0,229,160,.3);background:rgba(0,229,160,.08)}.tb2.rs:hover{background:rgba(0,229,160,.18)}
+.tb2.dl{color:var(--r);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}.tb2.dl:hover{background:rgba(239,68,68,.18)}
+
+/* =========== PRODUITS PAGE =========== */
+#prod-inner{flex:1;overflow-y:auto;padding:18px 22px}
+.prodbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.apb{background:linear-gradient(135deg,var(--g),var(--g2));border:none;border-radius:7px;padding:8px 14px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:var(--bg);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;margin-left:auto}
+.apb:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,229,160,.25)}
+
+/* =========== MODALS =========== */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:999;display:none;align-items:center;justify-content:center}
+.mo.on{display:flex}
+.mb{background:var(--panel);border:1px solid var(--bdh);border-radius:15px;width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.mb.w{width:510px}
+.mh{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.mt{font-weight:700;font-size:14px}.mcl{background:none;border:none;cursor:pointer;color:var(--t2);font-size:17px;transition:color .15s}.mcl:hover{color:var(--t1)}
+.mbd{flex:1;overflow-y:auto;padding:18px}
+.mft{padding:11px 18px;border-top:1px solid var(--bd);display:flex;gap:7px;justify-content:flex-end}
+.fg{margin-bottom:13px}
+.flabel{font-size:9px;color:var(--t2);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;display:block}
+.fi{width:100%;background:var(--input);border:1px solid var(--bdh);border-radius:7px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t1);outline:none;transition:border-color .15s}
+.fi:focus{border-color:var(--g);box-shadow:0 0 0 2px rgba(0,229,160,.1)}
+.fi::placeholder{color:var(--t3)}
+.fsel{width:100%;background:var(--input);border:1px solid var(--bdh);border-radius:7px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t1);outline:none;cursor:pointer}
+.fsel:focus{border-color:var(--g)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fhint{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:3px}
+.bprim{background:linear-gradient(135deg,var(--g),var(--g2));border:none;border-radius:7px;padding:9px 18px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--bg);cursor:pointer;transition:all .15s}
+.bprim:hover{box-shadow:0 4px 12px rgba(0,229,160,.3)}
+.bsec{background:var(--card);border:1px solid var(--bd);border-radius:7px;padding:9px 14px;font-family:'DM Mono',monospace;font-size:11px;color:var(--t2);cursor:pointer;transition:all .15s}
+.bsec:hover{border-color:var(--t2);color:var(--t1)}
+.bdng{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:7px;padding:9px 14px;font-family:'DM Mono',monospace;font-size:11px;color:var(--r);cursor:pointer;transition:all .15s}
+.bdng:hover{background:rgba(239,68,68,.2)}
+.rscur{font-size:10px;color:var(--t2);font-family:'DM Mono',monospace;padding:7px 10px;background:var(--card);border-radius:5px;margin-bottom:11px;display:flex;justify-content:space-between}
+
+/* Ticket */
+#tkt{background:#fff;color:#111;font-family:'DM Mono',monospace;font-size:11px;border-radius:7px;padding:16px;line-height:1.6}
+#tkt .tc{text-align:center}#tkt .tl{font-size:14px;font-weight:700}
+#tkt .ts{border:none;border-top:1px dashed #ccc;margin:7px 0}
+#tkt .tr{display:flex;justify-content:space-between}#tkt .tb{font-weight:700}
+#tkt .tt{font-size:12px;font-weight:700;border-top:2px solid #111;margin-top:4px;padding-top:4px}
+#tkt .tsm{font-size:9px;color:#777}
+
+/* Toast + Flash */
+#toast{position:fixed;bottom:46px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--card);border:1px solid var(--bdh);border-radius:7px;padding:8px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--t1);z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s,transform .2s;white-space:nowrap}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.s{border-color:var(--g);color:var(--g)}#toast.e{border-color:var(--r);color:var(--r)}#toast.w{border-color:var(--a);color:var(--a)}
+#flash{position:fixed;inset:0;background:rgba(0,229,160,.1);pointer-events:none;z-index:9998;opacity:0;transition:opacity .3s}
+#flash.on{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ======= LOGIN ======= -->
+<div class="page on" id="pg-login">
+  <div class="lcard">
+    <div class="llogo">
+      <div class="llogo-icon">⚕</div>
+      <div><div class="llogo-t fs">PharmaCaisse Pro</div><div class="llogo-s">Système Point de Vente</div></div>
+    </div>
+    <div class="lgreet">
+      <h2 class="fs">Connexion</h2>
+      <p class="fm">Identificez-vous pour accéder au système</p>
+    </div>
+    <div class="fg"><label class="flabel">Identifiant</label><input type="text" class="finput" id="lid" placeholder="Entrez votre identifiant" autocomplete="off"></div>
+    <div class="fg"><label class="flabel">Mot de passe</label><input type="password" class="finput" id="lpw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div id="lerr" class="lerr">Identifiant ou mot de passe incorrect</div>
+    <button class="lbtn" onclick="doLogin()">Se connecter →</button>
+    <div class="lhint">
+      <div class="lhint-t">Comptes de démonstration (cliquer pour remplir)</div>
+      <div class="lhu" onclick="fill('admin','admin123')"><span class="lhu-l">admin</span><span class="lhu-p">admin123</span><span class="badg ba">Admin</span></div>
+      <div class="lhu" onclick="fill('caissier1','1234')"><span class="lhu-l">caissier1</span><span class="lhu-p">1234</span><span class="badg bc">Caissier</span></div>
+      <div class="lhu" onclick="fill('marie','5678')"><span class="lhu-l">marie</span><span class="lhu-p">5678</span><span class="badg bc">Caissier</span></div>
+    </div>
+    <div style="text-align:center;margin-top:13px;font-size:10px;color:var(--t3);font-family:'DM Mono',monospace">© @dieuveilmikengue — Pointe-Noire, Congo</div>
+  </div>
+</div>
+
+<!-- ======= SHELL ======= -->
+<div id="shell">
+  <nav id="sb">
+    <div class="sbl"><div class="sbl-i">⚕</div><div><div class="sbl-t fs">PharmaCaisse</div><div class="sbl-s">Pro v2.0</div></div></div>
+      <div class="sbnav">
+      <div class="navs">Navigation</div>
+      <div class="ni on" id="ni-dash" onclick="go('dash')">
+        <span class="ni-i"><i class="fa-solid fa-chart-pie"></i></span>
+        <span>Dashboard</span>
+      </div>
+      <div class="ni" id="ni-pos" onclick="go('pos')">
+        <span class="ni-i"><i class="fa-solid fa-cash-register"></i></span>
+        <span>Point de Vente</span>
+      </div>
+      
+      <div class="navs" style="margin-top:6px">Gestion</div>
+      <div class="ni" id="ni-stock" onclick="go('stock')">
+        <span class="ni-i"><i class="fa-solid fa-boxes-stacked"></i></span>
+        <span>Stocks</span>
+        <span class="nbadg" id="abadg">!</span>
+      </div>
+      <div class="ni" id="ni-prod" onclick="go('prod')">
+        <span class="ni-i"><i class="fa-solid fa-pills"></i></span>
+        <span>Produits</span>
+      </div>
+    </div>
+    <div class="sbu">
+      <div class="av" id="uav">?</div>
+      <div><div class="un fs" id="uname">—</div><div class="ur" id="urole">—</div></div>
+      <button class="loutb" onclick="doLogout()" title="Déconnexion">⏻</button>
+    </div>
+  </nav>
+
+  <div id="tb">
+    <div class="tbt fs" id="tbtit">Dashboard</div>
+    <div class="tbdiv"></div>
+    <div class="tbst"><div class="tbsl">Ventes / jour</div><div class="tbsv" id="hds">0</div></div>
+    <div class="tbdiv"></div>
+    <div class="tbst"><div class="tbsl">CA / jour</div><div class="tbsv" id="hdca">0 F</div></div>
+    <div class="tbdiv"></div>
+    <div class="tbst"><div class="tbsl">Produits</div><div class="tbsv" id="hdp">—</div></div>
+    <div class="tbck fm" id="clk">--:--:--</div>
+  </div>
+
+  <div id="ca">
+    <!-- DASHBOARD -->
+    <div class="cpg on" id="pg-dash">
+      <div id="dash-inner">
+        <div class="kpis" id="kpis"></div>
+        <div class="drow drow3" id="dcharts"></div>
+        <div class="drow drow2" id="dbot"></div>
+      </div>
+    </div>
+
+    <!-- POS -->
+    <div class="cpg" id="pg-pos">
+      <div id="pos-inner">
+        <div id="pos-l">
+          <div class="sarea">
+            <div class="swrap">
+              <span class="sico"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input type="text" id="srch" placeholder="Rechercher un médicament…" autocomplete="off" spellcheck="false">
+              <span class="sbadg">↵ Ajouter</span>
+              <div id="sugg"></div>
+            </div>
+          </div>
+          <div id="cattabs"></div>
+          <div id="pgrid"></div>
+        </div>
+        <div id="pos-r">
+          <div class="chdr">
+            <div class="ctg"><span class="ctit fs">Commande</span><span class="cbadg" id="ccnt">0</span></div>
+            <button class="cclr" onclick="clrCart()"><i class="fa-solid fa-trash-can"></i> Vider</button>
+          </div>
+          <div class="ptabs">
+            <button class="ptab on" id="pt-c" onclick="posTb('c')"><i class="fa-solid fa-cart-shopping"></i> Panier</button>
+            <button class="ptab" id="pt-h" onclick="posTb('h')"><i class="fa-solid fa-clock-rotate-left"></i> Historique</button>
+          </div>
+          <div id="cv" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+            <div id="citms">
+              <div class="cemp" id="cemp">
+                <div class="cemi"><i class="fa-solid fa-cart-plus"></i></div>
+                <div class="cemt">Panier vide</div>
+              </div>
+            </div>
+            <div id="ctots">
+              <div class="trow"><span class="tlbl">Sous-total</span><span class="tval" id="sub">0 FCFA</span></div>
+              <div class="trow"><span class="tlbl">TVA (0%)</span><span class="tval" style="color:var(--t3)">0 FCFA</span></div>
+              <div class="grow"><span class="glbl fs">TOTAL</span><span class="gval" id="gtot">0 FCFA</span></div>
+            </div>
+            <div id="payarea">
+              <div class="plbl">Montant reçu</div>
+              <input type="number" id="payinp" placeholder="0" min="0">
+              <div class="qamts" id="qamts"></div>
+              <div class="chdisp"><span class="chlbl">Monnaie à rendre</span><span id="chval">— FCFA</span></div>
+            </div>
+            <button id="valbtn" onclick="valSale()" disabled>
+                <span><i class="fa-solid fa-bolt"></i> Encaisser</span>
+                <span class="f12b">F12</span>
+            </button>
+          </div>
+          <div id="histlist"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STOCK -->
+    <div class="cpg" id="pg-stock">
+      <div id="stock-inner">
+        <div class="stbar">
+          <div class="tsrch"><span class="tsi">⌕</span><input type="text" id="stsrch" placeholder="Rechercher…" oninput="rndrST()" autocomplete="off"></div>
+          <select class="tsel" id="stfilt" onchange="rndrST()">
+            <option value="all">Tous les stocks</option>
+            <option value="low">Stock faible</option>
+            <option value="out">Rupture</option>
+            <option value="ok">Stock OK</option>
+          </select>
+          <select class="tsel" id="stcatf" onchange="rndrST()"><option value="all">Toutes catégories</option></select>
+          <button class="astkb" onclick="openRS(null)">+ Réapprovisionner</button>
+        </div>
+        <div class="stwrap">
+          <table class="sttbl">
+            <thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th style="text-align:right">Actions</th></tr></thead>
+            <tbody id="stbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUITS -->
+    <div class="cpg" id="pg-prod">
+      <div id="prod-inner">
+        <div class="prodbar">
+          <div class="tsrch"><span class="tsi">⌕</span><input type="text" id="prdsrch" placeholder="Rechercher…" oninput="rndrPT()" autocomplete="off"></div>
+          <button class="apb" onclick="openPM(null)">+ Nouveau produit</button>
+        </div>
+        <div class="stwrap">
+          <table class="sttbl">
+            <thead><tr><th>#</th><th>Produit</th><th>Catégorie</th><th>Unité</th><th>Prix</th><th>Stock</th><th style="text-align:right">Actions</th></tr></thead>
+            <tbody id="ptbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ft" style="position:fixed">
+    <div class="fdot"></div>
+    <span>Base de données locale — LocalStorage</span>
+    <span>|</span>
+    <span id="ftdt"></span>
+    <div class="fsig">Conçu par <span>@dieuveilmikengue</span></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="mo-receipt">
+  <div class="mb">
+    <div class="mh"><span class="mt fs">🖨 Aperçu Ticket</span><button class="mcl" onclick="cmo('mo-receipt')">✕</button></div>
+    <div class="mbd"><div id="tkt"></div></div>
+    <div class="mft"><button class="bsec" onclick="cmo('mo-receipt')">Fermer</button><button class="bprim" onclick="prtTkt()">Imprimer</button></div>
+  </div>
+</div>
+
+<div class="mo" id="mo-prod">
+  <div class="mb w">
+    <div class="mh"><span class="mt fs" id="pmt">Nouveau produit</span><button class="mcl" onclick="cmo('mo-prod')">✕</button></div>
+    <div class="mbd">
+      <input type="hidden" id="pm-id">
+      <div class="frow">
+        <div class="fg"><label class="flabel">Nom *</label><input type="text" class="fi" id="pm-nm" placeholder="ex: Paracétamol 500mg"></div>
+        <div class="fg"><label class="flabel">Catégorie *</label><input type="text" class="fi" id="pm-cat" placeholder="ex: Douleur" list="catdl"><datalist id="catdl"></datalist></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="flabel">Prix (FCFA) *</label><input type="number" class="fi" id="pm-pr" placeholder="0" min="0"></div>
+        <div class="fg"><label class="flabel">Unité</label>
+          <select class="fsel" id="pm-un">
+            <option value="cp">Comprimé (cp)</option><option value="gél">Gélule (gél)</option>
+            <option value="amp">Ampoule (amp)</option><option value="flc">Flacon (flc)</option>
+            <option value="sach">Sachet (sach)</option><option value="tube">Tube</option><option value="pce">Pièce</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="flabel">Stock initial</label><input type="number" class="fi" id="pm-st" placeholder="0" min="0"><div class="fhint">Quantité à la création</div></div>
+        <div class="fg"><label class="flabel">Seuil alerte</label><input type="number" class="fi" id="pm-th" placeholder="10" min="0"><div class="fhint">Alerte en dessous de ce seuil</div></div>
+      </div>
+      <div class="fg"><label class="flabel">Description</label><input type="text" class="fi" id="pm-dc" placeholder="Informations complémentaires…"></div>
+    </div>
+    <div class="mft"><button class="bsec" onclick="cmo('mo-prod')">Annuler</button><button class="bprim" onclick="saveProd()">Enregistrer</button></div>
+  </div>
+</div>
+
+<div class="mo" id="mo-rs">
+  <div class="mb">
+    <div class="mh">
+      <span class="mt fs"><i class="fa-solid fa-boxes-packing"></i> Réapprovisionnement</span>
+      <button class="mcl" onclick="cmo('mo-rs')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="mbd">
+      <div class="fg"><label class="flabel">Produit</label><select class="fsel" id="rs-sel" style="width:100%" onchange="updRS()"></select></div>
+      <div class="rscur" id="rscur"><span>Stock actuel</span><span id="rscurv" class="fm">—</span></div>
+      <div class="fg"><label class="flabel">Quantité à ajouter *</label><input type="number" class="fi" id="rs-qty" placeholder="0" min="1"></div>
+      <div class="fg"><label class="flabel">Référence / BL</label><input type="text" class="fi" id="rs-ref" placeholder="BL-XXXX…"></div>
+      <div class="fg"><label class="flabel">Note</label><input type="text" class="fi" id="rs-note" placeholder="Commentaire…"></div>
+    </div>
+    <div class="mft"><button class="bsec" onclick="cmo('mo-rs')">Annuler</button><button class="bprim" onclick="doRS()">✓ Valider</button></div>
+  </div>
+</div>
+
+<div class="mo" id="mo-del">
+  <div class="mb" style="width:340px">
+    <div class="mh"><span class="mt fs">⚠ Confirmation</span><button class="mcl" onclick="cmo('mo-del')">✕</button></div>
+    <div class="mbd"><p style="font-size:12px;color:var(--t2);line-height:1.6" id="delmsg"></p></div>
+    <div class="mft"><button class="bsec" onclick="cmo('mo-del')">Annuler</button><button class="bdng" id="delok">Supprimer</button></div>
+  </div>
+</div>
+
+<div id="flash"></div>
+<div id="toast"></div>
+
+<script>
+// ======= USERS =======
+const USERS=[
+  {login:'admin',pass:'admin123',name:'Administrateur',role:'Administrateur',ini:'AD'},
+  {login:'caissier1',pass:'1234',name:'Jean Caissier',role:'Caissier',ini:'JC'},
+  {login:'marie',pass:'5678',name:'Marie Nguesso',role:'Caissier',ini:'MN'},
+];
+let CU=null;
+
+function fill(u,p){document.getElementById('lid').value=u;document.getElementById('lpw').value=p;}
+function doLogin(){
+  const u=document.getElementById('lid').value.trim(),p=document.getElementById('lpw').value;
+  const usr=USERS.find(x=>x.login===u&&x.pass===p);
+  if(!usr){document.getElementById('lerr').classList.add('on');document.getElementById('lpw').value='';return;}
+  document.getElementById('lerr').classList.remove('on');
+  CU=usr;
+  document.getElementById('uname').textContent=usr.name;
+  document.getElementById('urole').textContent=usr.role;
+  document.getElementById('uav').textContent=usr.ini;
+  document.getElementById('pg-login').classList.remove('on');
+  document.getElementById('shell').classList.add('on');
+  initApp();
+}
+function doLogout(){
+  CU=null; cart=[];
+  document.getElementById('shell').classList.remove('on');
+  document.getElementById('pg-login').classList.add('on');
+  document.getElementById('lid').value='';document.getElementById('lpw').value='';
+}
+
+// ======= DATA =======
+const IP=[
+  {id:1,name:'Artemether 80mg',price:3500,category:'Paludisme',stock:45,unit:'cp',threshold:10,desc:'Antipaludéen de référence'},
+  {id:2,name:'Paracétamol 500mg',price:500,category:'Douleur',stock:120,unit:'cp',threshold:20,desc:'Antalgique/Antipyrétique'},
+  {id:3,name:'Ciprofloxacine 500mg',price:4200,category:'Typhoïde',stock:12,unit:'cp',threshold:10,desc:'Fluoroquinolone'},
+  {id:4,name:'Amoxicilline 250mg',price:1200,category:'Antibiotique',stock:80,unit:'gél',threshold:15,desc:'Pénicilline large spectre'},
+  {id:5,name:'Métronidazole 250mg',price:750,category:'Antiparasitaire',stock:60,unit:'cp',threshold:10,desc:'Anti-infectieux'},
+  {id:6,name:'Ibuprofène 400mg',price:600,category:'Douleur',stock:95,unit:'cp',threshold:15,desc:'AINS'},
+  {id:7,name:'Cotrimoxazole 480mg',price:350,category:'Antibiotique',stock:200,unit:'cp',threshold:30,desc:'Sulfamide'},
+  {id:8,name:'Diazépam 5mg',price:800,category:'Neurologie',stock:8,unit:'cp',threshold:15,desc:'Benzodiazépine'},
+  {id:9,name:'Loratadine 10mg',price:450,category:'Allergie',stock:55,unit:'cp',threshold:10,desc:'Antihistaminique'},
+  {id:10,name:'Oméprazole 20mg',price:900,category:'Gastro',stock:70,unit:'gél',threshold:15,desc:'IPP'},
+  {id:11,name:'Chloroquine 150mg',price:2800,category:'Paludisme',stock:3,unit:'cp',threshold:10,desc:'Antipaludéen'},
+  {id:12,name:'Quinine Inj. 500mg',price:6500,category:'Paludisme',stock:18,unit:'amp',threshold:5,desc:'Antipaludéen injectable'},
+  {id:13,name:'Vitamine C 500mg',price:250,category:'Vitamines',stock:300,unit:'cp',threshold:30,desc:'Acide ascorbique'},
+  {id:14,name:'Fer + Acide Folique',price:1500,category:'Vitamines',stock:40,unit:'cp',threshold:10,desc:'Supplément grossesse'},
+  {id:15,name:'Sérum Glucosé 5%',price:2200,category:'Perfusion',stock:0,unit:'flc',threshold:5,desc:'Soluté de perfusion'},
+  {id:16,name:'Dexaméthasone 8mg',price:3800,category:'Corticoïde',stock:22,unit:'amp',threshold:5,desc:'Corticostéroïde injectable'},
+  {id:17,name:'Tramadol 50mg',price:1100,category:'Douleur',stock:35,unit:'gél',threshold:10,desc:'Antalgique opioïde'},
+  {id:18,name:'Albendazole 400mg',price:1800,category:'Antiparasitaire',stock:48,unit:'cp',threshold:10,desc:'Antiparasitaire'},
+];
+
+function iDB(){if(!ls('pc_prods'))ls('pc_prods',JSON.stringify(IP));if(!ls('pc_sales'))ls('pc_sales',JSON.stringify([]));if(!ls('pc_rs'))ls('pc_rs',JSON.stringify([]));}
+function ls(k,v){if(v!==undefined)localStorage.setItem(k,v);else return localStorage.getItem(k);}
+function gP(){return JSON.parse(ls('pc_prods')||'[]');}
+function sP(p){ls('pc_prods',JSON.stringify(p));}
+function gS(){return JSON.parse(ls('pc_sales')||'[]');}
+function sS(s){ls('pc_sales',JSON.stringify(s));}
+function gRS(){return JSON.parse(ls('pc_rs')||'[]');}
+function sRS(r){ls('pc_rs',JSON.stringify(r));}
+function nID(){const p=gP();return p.length>0?Math.max(...p.map(x=>x.id))+1:1;}
+
+// ======= INIT =======
+function initApp(){
+  iDB(); clk(); ftDate(); updTB(); rndrDash(); rndrCats(); rndrProds(); stCatFilt(); rndrST(); rndrPT(); rndrHist(); updAB();
+}
+
+function clk(){const t=()=>{document.getElementById('clk').textContent=new Date().toLocaleTimeString('fr-FR')};t();setInterval(t,1000);}
+function ftDate(){document.getElementById('ftdt').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+
+// ======= NAV =======
+let CP='dash';
+const PTIT={dash:'Dashboard',pos:'Point de Vente',stock:'Gestion des Stocks',prod:'Catalogue Produits'};
+function go(pg){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('ni-'+pg).classList.add('on');
+  document.querySelectorAll('.cpg').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-'+pg).classList.add('on');
+  document.getElementById('tbtit').textContent=PTIT[pg];
+  CP=pg;
+  if(pg==='dash')rndrDash();
+  if(pg==='pos'){rndrProds();setTimeout(()=>document.getElementById('srch').focus(),100);}
+  if(pg==='stock')rndrST();
+  if(pg==='prod')rndrPT();
+}
+
+// ======= TOPBAR =======
+function updTB(){
+  const S=gS(),P=gP(),today=new Date().toDateString();
+  const ts=S.filter(s=>new Date(s.date).toDateString()===today);
+  const ca=ts.reduce((a,s)=>a+s.total,0);
+  document.getElementById('hds').textContent=ts.length;
+  document.getElementById('hdca').textContent=ca.toLocaleString('fr-FR')+' F';
+  document.getElementById('hdp').textContent=P.filter(p=>p.stock>0).length+'/'+P.length;
+}
+
+function updAB(){
+  const p=gP(),low=p.filter(x=>x.stock<=(x.threshold||10));
+  const b=document.getElementById('abadg');
+  if(low.length>0){b.style.display='';b.textContent=low.length}else{b.style.display='none'}
+}
+
+// ======= DASHBOARD =======
+const CC=['#00e5a0','#3b82f6','#f59e0b','#8b5cf6','#06b6d4','#ef4444','#10b981','#f97316','#ec4899'];
+function rndrDash(){
+  updTB();
+  const S=gS(),P=gP(),today=new Date().toDateString();
+  const ts=S.filter(s=>new Date(s.date).toDateString()===today);
+  const ca=ts.reduce((a,s)=>a+s.total,0),tr=S.reduce((a,s)=>a+s.total,0);
+  const lw=P.filter(p=>p.stock>0&&p.stock<=(p.threshold||10)),oos=P.filter(p=>p.stock===0);
+  // KPIs
+  document.getElementById('kpis').innerHTML=`
+    <div class="kpi green">
+        <div class="kpi-ico"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+        <div class="kpi-lab">CA Aujourd'hui</div>
+        <div class="kpi-val fs">${ca.toLocaleString('fr-FR')}</div>
+        <div class="kpi-sub fm">FCFA — ${ts.length} vente(s)</div>
+    </div>
+    
+    <div class="kpi blue">
+        <div class="kpi-ico"><i class="fa-solid fa-receipt"></i></div>
+        <div class="kpi-lab">Total Transactions</div>
+        <div class="kpi-val fs">${S.length}</div>
+        <div class="kpi-sub fm">CA total: ${tr.toLocaleString('fr-FR')} F</div>
+    </div>
+    
+    <div class="kpi amber">
+        <div class="kpi-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="kpi-lab">Alertes Stock</div>
+        <div class="kpi-val fs" style="color:var(--a)">${lw.length+oos.length}</div>
+        <div class="kpi-sub fm">${oos.length} rupture(s) — ${lw.length} faible(s)</div>
+    </div>
+    
+    <div class="kpi purple">
+        <div class="kpi-ico"><i class="fa-solid fa-pills"></i></div>
+        <div class="kpi-lab">Produits Actifs</div>
+        <div class="kpi-val fs">${P.filter(p=>p.stock>0).length}</div>
+        <div class="kpi-sub fm">sur ${P.length} référence(s)</div>
+    </div>`;
+  // Charts
+  const l7=last7(S),tprd=topProds(S.flatMap(s=>s.items),5),cats=catStats(P);
+  const mx=Math.max(...l7.map(d=>d.ca),1);
+  document.getElementById('dcharts').innerHTML=`
+    <div class="dpan"><div class="dpan-t fs">Ventes — 7 derniers jours <span>FCFA</span></div>
+      <div class="barchart">${l7.map(d=>`<div class="barcol"><div class="barfill" style="height:${Math.max(3,d.ca/mx*85)}px;background:${d.ca>0?'var(--g)':'var(--bd)'}"></div><div class="barlbl">${d.lbl}</div></div>`).join('')}</div>
+    </div>
+    <div class="dpan"><div class="dpan-t fs">Top Produits <span>qté</span></div>
+      <div>${tprd.length===0?'<div style="color:var(--t3);font-size:11px;font-family:\'DM Mono\',monospace;padding:18px 0;text-align:center">Aucune vente</div>'
+        :tprd.map((p,i)=>`<div class="tpi"><span class="tpi-rk">${i+1}</span><span class="tpi-nm">${p.name}</span><div class="tpbw"><div class="tpb" style="width:${p.qty/Math.max(...tprd.map(x=>x.qty),1)*100}%"></div></div><span class="tpv">${p.qty} u.</span></div>`).join('')}</div>
+    </div>
+    <div class="dpan"><div class="dpan-t fs">Par Catégorie</div>
+      <div>${cats.slice(0,7).map((c,i)=>`<div class="catr"><div class="catd" style="background:${CC[i%CC.length]}"></div><span class="catn">${c.cat}</span><div class="catbw"><div class="catbf" style="width:${Math.max(3,c.n/P.length*100)}%;background:${CC[i%CC.length]}"></div></div><span class="catp">${c.n}p</span></div>`).join('')}</div>
+    </div>`;
+  const alrts=[...oos.map(p=>({...p,tp:'c'})),...lw.map(p=>({...p,tp:'l'}))];
+  const recSales=S.slice(0,6);
+  document.getElementById('dbot').innerHTML=`
+    <div class="dpan"><div class="dpan-t fs">Transactions récentes</div>
+      ${recSales.length===0?'<div style="color:var(--t3);font-size:11px;font-family:\'DM Mono\',monospace;padding:18px 0;text-align:center">Aucune vente</div>'
+        :recSales.map(s=>{const d=new Date(s.date),t=d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+          return`<div class="tpi" style="cursor:pointer" onclick="showR('${s.id}');go('pos');posTb('h')"><div style="flex:1"><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--b)">${s.id}</div><div style="font-size:9px;color:var(--t3);font-family:'DM Mono',monospace">${t}</div></div><div style="text-align:right"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--g)">${s.total.toLocaleString('fr-FR')} F</div><div style="font-size:9px;color:var(--t3);font-family:'DM Mono',monospace">${s.items.reduce((a,i)=>a+i.qty,0)} art.</div></div></div>`;}).join('')}
+    </div>
+    <div class="dpan"><div class="dpan-t fs">Alertes Stock <span style="color:var(--r)">${alrts.length}</span></div>
+      ${alrts.length===0?'<div style="color:var(--g);font-size:11px;font-family:\'DM Mono\',monospace;padding:18px 0;text-align:center">✓ Tous les stocks OK</div>'
+        :alrts.map(p=>`<div class="alrt ${p.tp}" onclick="go('stock')"><span>${p.tp==='c'?'🔴':'🟡'}</span><span class="alrt-nm">${p.name}</span><span class="alrt-qty">${p.stock===0?'Rupture':p.stock+' restants'}</span></div>`).join('')}
+    </div>`;
+}
+
+function last7(S){const D=['D','L','M','M','J','V','S'],r=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const ds=d.toDateString(),ca=S.filter(s=>new Date(s.date).toDateString()===ds).reduce((a,s)=>a+s.total,0);r.push({lbl:D[d.getDay()],ca});}return r;}
+function topProds(items,n){const m={};items.forEach(i=>{if(!m[i.name])m[i.name]={name:i.name,qty:0};m[i.name].qty+=i.qty;});return Object.values(m).sort((a,b)=>b.qty-a.qty).slice(0,n);}
+function catStats(P){const m={};P.forEach(p=>{if(!m[p.category])m[p.category]={cat:p.category,n:0};m[p.category].n++;});return Object.values(m).sort((a,b)=>b.n-a.n);}
+
+// ======= POS — CATEGORIES =======
+let pCat='all',pSrch='';
+function rndrCats(){
+  const P=gP(),cats=[...new Set(P.map(p=>p.category))].sort();
+  const c=document.getElementById('cattabs');
+  c.innerHTML='<button class="ctab on" data-cat="all" onclick="fCat(\'all\')">Tous</button>';
+  cats.forEach(cat=>{const b=document.createElement('button');b.className='ctab';b.dataset.cat=cat;b.textContent=cat;b.onclick=()=>fCat(cat);c.appendChild(b);});
+  pCat='all';
+}
+function fCat(cat){pCat=cat;document.querySelectorAll('.ctab').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));rndrProds();}
+
+// ======= POS — PRODUCTS =======
+function rndrProds(srch=''){
+  let P=gP(); const g=document.getElementById('pgrid'); g.innerHTML='';
+  if(pCat!=='all')P=P.filter(p=>p.category===pCat);
+  if(srch){const q=srch.toLowerCase();P=P.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q));}
+  if(P.length===0){g.innerHTML='<div class="nores">Aucun produit trouvé</div>';return;}
+  P.forEach(prod=>{
+    const sc=prod.stock===0?'sout':prod.stock<=(prod.threshold||10)?'slow':'sok';
+    const sl=prod.stock===0?'Rupture':prod.stock<=(prod.threshold||10)?prod.stock+' rest.':prod.stock;
+    const oos=prod.stock===0; const d=document.createElement('div');
+    d.className='pcd'+(oos?' oos':prod.stock<=(prod.threshold||10)?' lows':'');
+    d.innerHTML=`<span class="psp ${sc}">${sl}</span><div class="pcatl">${prod.category}</div><div class="pnml">${prod.name}</div><div class="pprl">${prod.price.toLocaleString('fr-FR')} FCFA</div><button class="padb" onclick="addC(${prod.id})" ${oos?'disabled':''}>${oos?'✕ Rupture':'+ Ajouter'}</button>`;
+    if(!oos)d.addEventListener('dblclick',()=>addC(prod.id));
+    g.appendChild(d);
+  });
+}
+
+// ======= POS — SEARCH =======
+let sIdx=-1;
+document.addEventListener('DOMContentLoaded',()=>{
+  const si=document.getElementById('srch'),sb=document.getElementById('sugg');
+  si.addEventListener('input',e=>{pSrch=e.target.value.trim();rndrProds(pSrch);rndrSugg(pSrch);});
+  si.addEventListener('keydown',e=>{
+    const items=sb.querySelectorAll('.si');
+    if(e.key==='ArrowDown'){e.preventDefault();sIdx=Math.min(sIdx+1,items.length-1);hlSugg(items);}
+    else if(e.key==='ArrowUp'){e.preventDefault();sIdx=Math.max(sIdx-1,-1);hlSugg(items);}
+    else if(e.key==='Escape'){hideSugg();}
+    else if(e.key==='Enter'){
+      e.preventDefault();
+      if(sIdx>=0&&items[sIdx])addC(parseInt(items[sIdx].dataset.id));
+      else{let ps=gP().filter(p=>p.stock>0);if(pSrch){const q=pSrch.toLowerCase();ps=ps.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q));}if(ps.length>0)addC(ps[0].id);}
+      si.value='';pSrch='';hideSugg();rndrProds();
+    }
+  });
+  document.addEventListener('click',e=>{if(!sb.contains(e.target)&&e.target!==si)hideSugg();});
+  document.getElementById('payinp').addEventListener('input',updCh);
+});
+
+function rndrSugg(q){
+  const sb=document.getElementById('sugg');
+  if(!q){hideSugg();return;}
+  const ps=gP().filter(p=>{const s=q.toLowerCase();return p.name.toLowerCase().includes(s)||p.category.toLowerCase().includes(s);}).slice(0,6);
+  if(ps.length===0){hideSugg();return;}
+  sb.innerHTML=ps.map(p=>`<div class="si" data-id="${p.id}" onclick="fromSugg(${p.id})"><span class="si-cat">${p.category}</span><span class="si-nm">${hlM(p.name,q)}</span><span class="si-pr">${p.price.toLocaleString('fr-FR')}</span><span class="si-st ${p.stock===0?'out':p.stock<=10?'low':''}">${p.stock===0?'✕':p.stock}</span></div>`).join('');
+  sb.classList.add('on');sIdx=-1;
+}
+function hlM(name,q){const i=name.toLowerCase().indexOf(q.toLowerCase());if(i<0)return name;return name.slice(0,i)+`<span style="color:var(--g);font-weight:600">${name.slice(i,i+q.length)}</span>`+name.slice(i+q.length);}
+function hlSugg(items){items.forEach((el,i)=>el.classList.toggle('act',i===sIdx));}
+function hideSugg(){const sb=document.getElementById('sugg');sb.classList.remove('on');sb.innerHTML='';sIdx=-1;}
+function fromSugg(id){addC(id);const si=document.getElementById('srch');si.value='';pSrch='';hideSugg();rndrProds();si.focus();}
+
+// ======= CART =======
+let cart=[];
+function addC(id){
+  const P=gP(),prod=P.find(p=>p.id===id);
+  if(!prod||prod.stock===0){toast('Rupture de stock','e');return;}
+  const ex=cart.find(c=>c.id===id);
+  if(ex){if(ex.qty>=prod.stock){toast(`Stock max: ${prod.stock}`,'w');return;}ex.qty++;}
+  else cart.push({id:prod.id,name:prod.name,price:prod.price,qty:1,unit:prod.unit||'cp'});
+  rndrCart();toast(`${prod.name} ✓`,'s');
+}
+function rmC(id){cart=cart.filter(c=>c.id!==id);rndrCart();}
+function chQty(id,d){
+  const P=gP(),prod=P.find(p=>p.id===id),item=cart.find(c=>c.id===id);
+  if(!item)return;item.qty+=d;
+  if(item.qty<=0)cart=cart.filter(c=>c.id!==id);
+  else if(prod&&item.qty>prod.stock){item.qty=prod.stock;toast(`Max: ${prod.stock}`,'w');}
+  rndrCart();
+}
+function clrCart(){if(!cart.length)return;cart=[];document.getElementById('payinp').value='';rndrCart();}
+function rndrCart(){
+  const c=document.getElementById('citms'),emp=document.getElementById('cemp');
+  const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  document.getElementById('ccnt').textContent=cart.length;
+  c.innerHTML='';
+  if(!cart.length){c.appendChild(emp);emp.style.display='flex';}
+  else{
+    emp.style.display='none';
+    cart.forEach(item=>{
+      const d=document.createElement('div');d.className='citm';
+      d.innerHTML=`<div class="citm-t"><span class="citm-nm">${item.name}</span><button class="citm-rm" onclick="rmC(${item.id})">✕</button></div>
+        <div class="citm-b"><div class="cqty"><button class="qbtn" onclick="chQty(${item.id},-1)">−</button><span class="qnum">${item.qty}</span><button class="qbtn" onclick="chQty(${item.id},+1)">+</button><span style="font-size:9px;color:var(--t3);font-family:'DM Mono',monospace">${item.unit}</span></div><span class="cipr">${(item.price*item.qty).toLocaleString('fr-FR')} F</span></div>`;
+      c.appendChild(d);
+    });c.appendChild(emp);
+  }
+  document.getElementById('sub').textContent=sub.toLocaleString('fr-FR')+' FCFA';
+  document.getElementById('gtot').textContent=sub.toLocaleString('fr-FR')+' FCFA';
+  rndrQA(sub);updCh();
+  document.getElementById('valbtn').disabled=!cart.length;
+}
+function rndrQA(tot){
+  if(!tot){document.getElementById('qamts').innerHTML='';return;}
+  const amts=[...new Set([tot,Math.ceil(tot/1000)*1000,Math.ceil(tot/5000)*5000,Math.ceil(tot/10000)*10000])].slice(0,4);
+  document.getElementById('qamts').innerHTML=amts.map(a=>`<button class="qab" onclick="setPA(${a})">${a.toLocaleString('fr-FR')}</button>`).join('');
+}
+function setPA(a){document.getElementById('payinp').value=a;updCh();}
+function updCh(){
+  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0),rcv=parseFloat(document.getElementById('payinp').value)||0,el=document.getElementById('chval');
+  if(!rcv){el.textContent='— FCFA';el.className='';return;}
+  const ch=rcv-tot;el.textContent=(ch<0?'-':'')+Math.abs(ch).toLocaleString('fr-FR')+' FCFA';el.className=ch<0?'neg':'';
+}
+
+// ======= VALIDATE =======
+function valSale(){
+  if(!cart.length)return;
+  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0),rcv=parseFloat(document.getElementById('payinp').value)||0;
+  if(rcv>0&&rcv<tot){toast('Montant insuffisant','e');return;}
+  const P=gP();
+  cart.forEach(item=>{const p=P.find(x=>x.id===item.id);if(p)p.stock=Math.max(0,p.stock-item.qty);});
+  sP(P);
+  const S=gS(),sale={id:'TXN-'+Date.now(),date:new Date().toISOString(),items:[...cart],total:tot,received:rcv,change:rcv-tot,cashier:CU?.name||'—'};
+  S.unshift(sale);sS(S);
+  bldTkt(sale);
+  const f=document.getElementById('flash');f.classList.add('on');setTimeout(()=>f.classList.remove('on'),500);
+  cart=[];document.getElementById('payinp').value='';
+  rndrCart();rndrProds();rndrCats();updTB();rndrHist();updAB();
+  toast(`✓ Vente ${sale.id} enregistrée`,'s');
+  setTimeout(()=>document.getElementById('mo-receipt').classList.add('on'),300);
+}
+
+// ======= POS TABS =======
+function posTb(t){
+  document.getElementById('cv').style.display=t==='c'?'flex':'none';
+  document.getElementById('histlist').style.display=t==='h'?'block':'none';
+  document.getElementById('pt-c').classList.toggle('on',t==='c');
+  document.getElementById('pt-h').classList.toggle('on',t==='h');
+  if(t==='h')rndrHist();
+}
+
+// ======= HISTORY =======
+function rndrHist(){
+  const S=gS(),c=document.getElementById('histlist');
+  if(!S.length){c.innerHTML='<div style="text-align:center;padding:36px;font-family:\'DM Mono\',monospace;font-size:10px;color:var(--t3)">📋 Aucune transaction</div>';return;}
+  c.innerHTML=S.slice(0,50).map(s=>{
+    const d=new Date(s.date),t=d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),q=s.items.reduce((a,i)=>a+i.qty,0);
+    return`<div class="hi" onclick="showR('${s.id}')"><div class="hi-t"><span class="hi-id">${s.id}</span><span class="hi-tot">${s.total.toLocaleString('fr-FR')} F</span></div><div style="display:flex;justify-content:space-between;align-items:center"><span class="hi-time">${t}</span><div style="display:flex;align-items:center;gap:5px"><span style="font-size:9px;color:var(--t2)">${q} art.</span><button class="hi-pr" onclick="event.stopPropagation();showR('${s.id}')">🖨</button></div></div></div>`;
+  }).join('');
+}
+function showR(id){const s=gS().find(x=>x.id===id);if(!s)return;bldTkt(s);document.getElementById('mo-receipt').classList.add('on');}
+
+// ======= TICKET =======
+function bldTkt(sale){
+  const d=new Date(sale.date);
+  document.getElementById('tkt').innerHTML=`
+    <div class="tc"><div class="tl">⚕ PharmaCaisse Pro</div><div style="font-size:9px">Point de Vente — Pointe-Noire, Congo</div></div>
+    <hr class="ts"><div class="tr"><span>N° Ticket</span><span class="tb">${sale.id}</span></div>
+    <div class="tr"><span>Date</span><span>${d.toLocaleDateString('fr-FR')}</span></div>
+    <div class="tr"><span>Heure</span><span>${d.toLocaleTimeString('fr-FR')}</span></div>
+    <div class="tr"><span>Caissier</span><span>${sale.cashier||'—'}</span></div>
+    <hr class="ts"><div class="tb" style="margin-bottom:4px">ARTICLES</div>
+    ${sale.items.map(i=>`<div class="tr"><span>${i.name} x${i.qty}</span><span>${(i.price*i.qty).toLocaleString('fr-FR')} F</span></div>`).join('')}
+    <hr class="ts">
+    <div class="tr" style="font-size:10px"><span>SOUS-TOTAL</span><span>${sale.total.toLocaleString('fr-FR')} F</span></div>
+    <div class="tr" style="font-size:10px"><span>TVA 0%</span><span>0 F</span></div>
+    <div class="tr tt"><span>TOTAL</span><span>${sale.total.toLocaleString('fr-FR')} FCFA</span></div>
+    ${sale.received>0?`<hr class="ts"><div class="tr"><span>Reçu</span><span>${sale.received.toLocaleString('fr-FR')} F</span></div><div class="tr tb"><span>Monnaie</span><span>${Math.max(0,sale.change).toLocaleString('fr-FR')} F</span></div>`:''}
+    <hr class="ts"><div class="tc" style="margin-top:7px"><div>✓ Merci pour votre confiance !</div><div class="tsm" style="margin-top:5px">© @dieuveilmikengue</div></div>`;
+}
+function prtTkt(){
+  const content=document.getElementById('tkt').innerHTML;
+  const w=window.open('','_blank','width=300,height=600');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Ticket</title><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>body{font-family:'DM Mono',monospace;font-size:11px;padding:14px;color:#111;width:270px;margin:0 auto}
+  .tc{text-align:center}.tl{font-size:14px;font-weight:700}.ts{border:none;border-top:1px dashed #ccc;margin:7px 0}
+  .tr{display:flex;justify-content:space-between;margin-bottom:3px}.tb{font-weight:700}
+  .tt{font-size:12px;font-weight:700;border-top:2px solid #111;margin-top:4px;padding-top:4px}.tsm{font-size:9px;color:#777}
+  </style></head><body>${content}</body></html>`);
+  w.document.close();w.focus();setTimeout(()=>{w.print();w.close();},500);
+}
+
+// ======= STOCK PAGE =======
+function stCatFilt(){
+  const cats=[...new Set(gP().map(p=>p.category))].sort();
+  const sel=document.getElementById('stcatf');
+  sel.innerHTML='<option value="all">Toutes catégories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+function rndrST(){
+  const q=(document.getElementById('stsrch')?.value||'').toLowerCase();
+  const f=document.getElementById('stfilt')?.value||'all';
+  const cf=document.getElementById('stcatf')?.value||'all';
+  let P=gP();
+  if(q)P=P.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q));
+  if(f==='low')P=P.filter(p=>p.stock>0&&p.stock<=(p.threshold||10));
+  if(f==='out')P=P.filter(p=>p.stock===0);
+  if(f==='ok')P=P.filter(p=>p.stock>(p.threshold||10));
+  if(cf!=='all')P=P.filter(p=>p.category===cf);
+  const mx=Math.max(...P.map(p=>p.stock),1),tb=document.getElementById('stbody');
+  if(!P.length){tb.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--t3);font-family:'DM Mono',monospace;font-size:11px">Aucun produit trouvé</td></tr>`;return;}
+  tb.innerHTML=P.map(p=>{
+    const sc=p.stock===0?'out':p.stock<=(p.threshold||10)?'low':'ok';
+    const pct=Math.max(3,p.stock/mx*100),col=p.stock===0?'var(--r)':p.stock<=(p.threshold||10)?'var(--a)':'var(--g)';
+    return`<tr>
+      <td><div class="tdnm">${p.name}</div>${p.desc?`<div style="font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:2px">${p.desc}</div>`:''}</td>
+      <td><span class="tdcat">${p.category}</span></td>
+      <td><span class="tdpr">${p.price.toLocaleString('fr-FR')} F</span></td>
+      <td><span class="tdst ${sc}">${p.stock===0?'Rupture':p.stock+' '+p.unit}</span>
+        <span class="stbw"><span style="display:block;height:3px;border-radius:3px;width:${pct}%;background:${col}"></span></span>
+        <div style="font-size:8px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:2px">Seuil: ${p.threshold||10}</div>
+      </td>
+      <td><div class="tdact">
+        <button class="tb2 rs" onclick="openRS(${p.id})">+ Stock</button>
+        <button class="tb2 ed" onclick="openPM(${p.id})">✎</button>
+        <button class="tb2 dl" onclick="confDel(${p.id})">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ======= RESTOCK =======
+function openRS(id){
+  const P=gP(),sel=document.getElementById('rs-sel');
+  sel.innerHTML=P.map(p=>`<option value="${p.id}" ${p.id===id?'selected':''}>${p.name} (${p.category})</option>`).join('');
+  ['rs-qty','rs-ref','rs-note'].forEach(x=>document.getElementById(x).value='');
+  updRS();document.getElementById('mo-rs').classList.add('on');
+}
+function updRS(){
+  const id=parseInt(document.getElementById('rs-sel').value);
+  const prod=gP().find(p=>p.id===id);
+  document.getElementById('rscurv').textContent=prod?(prod.stock+' '+prod.unit):'—';
+}
+function doRS(){
+  const id=parseInt(document.getElementById('rs-sel').value),qty=parseInt(document.getElementById('rs-qty').value)||0;
+  if(qty<=0){toast('Quantité invalide','e');return;}
+  const P=gP(),prod=P.find(p=>p.id===id);
+  if(!prod){toast('Produit introuvable','e');return;}
+  prod.stock+=qty;sP(P);
+  const R=gRS();R.unshift({date:new Date().toISOString(),productId:id,productName:prod.name,qty,ref:document.getElementById('rs-ref').value,note:document.getElementById('rs-note').value,user:CU?.name||'—'});sRS(R);
+  cmo('mo-rs');rndrST();rndrProds();rndrCats();updAB();updTB();
+  toast(`+${qty} ${prod.unit} — ${prod.name}`,'s');
+}
+
+// ======= PRODUITS PAGE =======
+function rndrPT(){
+  const q=(document.getElementById('prdsrch')?.value||'').toLowerCase();
+  let P=gP();if(q)P=P.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q));
+  const tb=document.getElementById('ptbody');
+  if(!P.length){tb.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--t3);font-family:'DM Mono',monospace;font-size:11px">Aucun produit</td></tr>`;return;}
+  tb.innerHTML=P.map(p=>{
+    const sc=p.stock===0?'out':p.stock<=(p.threshold||10)?'low':'ok';
+    return`<tr>
+      <td style="color:var(--t3);font-family:'DM Mono',monospace;font-size:10px">${p.id}</td>
+      <td><div class="tdnm">${p.name}</div>${p.desc?`<div style="font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:1px">${p.desc}</div>`:''}</td>
+      <td><span class="tdcat">${p.category}</span></td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--t2)">${p.unit}</td>
+      <td><span class="tdpr">${p.price.toLocaleString('fr-FR')} F</span></td>
+      <td><span class="tdst ${sc}">${p.stock===0?'Rupture':p.stock}</span></td>
+      <td><div class="tdact">
+        <button class="tb2 rs" onclick="openRS(${p.id})">+ Stock</button>
+        <button class="tb2 ed" onclick="openPM(${p.id})">✎ Éditer</button>
+        <button class="tb2 dl" onclick="confDel(${p.id})">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ======= ADD/EDIT PRODUCT =======
+function openPM(id){
+  const cats=[...new Set(gP().map(p=>p.category))].sort();
+  document.getElementById('catdl').innerHTML=cats.map(c=>`<option value="${c}">`).join('');
+  if(id===null){
+    document.getElementById('pmt').textContent='Nouveau produit';
+    document.getElementById('pm-id').value='';
+    ['pm-nm','pm-cat','pm-pr','pm-dc'].forEach(x=>document.getElementById(x).value='');
+    document.getElementById('pm-un').value='cp';
+    document.getElementById('pm-st').value='0';
+    document.getElementById('pm-th').value='10';
+  }else{
+    const prod=gP().find(p=>p.id===id);if(!prod)return;
+    document.getElementById('pmt').textContent='Modifier le produit';
+    document.getElementById('pm-id').value=prod.id;
+    document.getElementById('pm-nm').value=prod.name;
+    document.getElementById('pm-cat').value=prod.category;
+    document.getElementById('pm-pr').value=prod.price;
+    document.getElementById('pm-un').value=prod.unit||'cp';
+    document.getElementById('pm-st').value=prod.stock;
+    document.getElementById('pm-th').value=prod.threshold||10;
+    document.getElementById('pm-dc').value=prod.desc||'';
+  }
+  document.getElementById('mo-prod').classList.add('on');
+}
+function saveProd(){
+  const nm=document.getElementById('pm-nm').value.trim(),cat=document.getElementById('pm-cat').value.trim();
+  const pr=parseFloat(document.getElementById('pm-pr').value),un=document.getElementById('pm-un').value;
+  const st=parseInt(document.getElementById('pm-st').value)||0,th=parseInt(document.getElementById('pm-th').value)||10;
+  const dc=document.getElementById('pm-dc').value.trim();
+  if(!nm||!cat||isNaN(pr)||pr<0){toast('Champs obligatoires manquants','e');return;}
+  const P=gP(),eid=parseInt(document.getElementById('pm-id').value);
+  if(eid){const p=P.find(x=>x.id===eid);if(p)Object.assign(p,{name:nm,category:cat,price:pr,unit:un,stock:st,threshold:th,desc:dc});}
+  else P.push({id:nID(),name:nm,category:cat,price:pr,unit:un,stock:st,threshold:th,desc:dc});
+  sP(P);cmo('mo-prod');rndrPT();rndrST();stCatFilt();rndrCats();rndrProds();updAB();updTB();
+  toast(eid?'Produit modifié ✓':'Produit ajouté ✓','s');
+}
+
+// ======= DELETE =======
+let delId=null;
+function confDel(id){
+  const prod=gP().find(p=>p.id===id);if(!prod)return;
+  delId=id;
+  document.getElementById('delmsg').textContent=`Supprimer "${prod.name}" ? Cette action est irréversible.`;
+  document.getElementById('delok').onclick=doDel;
+  document.getElementById('mo-del').classList.add('on');
+}
+function doDel(){
+  if(!delId)return;
+  sP(gP().filter(p=>p.id!==delId));
+  cmo('mo-del');rndrPT();rndrST();stCatFilt();rndrCats();rndrProds();updAB();
+  toast('Produit supprimé','w');delId=null;
+}
+
+// ======= UTILS =======
+function cmo(id){document.getElementById(id).classList.remove('on');}
+let toastT;
+function toast(msg,tp=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='on '+(tp||'');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',2500);
+}
+
+// ======= KEYBOARD =======
+document.addEventListener('keydown',e=>{
+  if(e.key==='F12'&&CP==='pos'){e.preventDefault();valSale();}
+  if(e.key==='Escape')document.querySelectorAll('.mo.on').forEach(m=>m.classList.remove('on'));
+  if(!e.ctrlKey&&!e.altKey&&!e.metaKey&&e.key.length===1&&CP==='pos'){
+    const f=document.activeElement;
+    if(f!==document.getElementById('srch')&&f!==document.getElementById('payinp'))document.getElementById('srch').focus();
+  }
+});
+</script>
+</body>
+</html>
